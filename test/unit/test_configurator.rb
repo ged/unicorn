@@ -180,4 +180,12 @@ class TestConfigurator < Test::Unit::TestCase
     end
   end
 
+  def test_after_fork_wrong_arity
+    [ proc { |a| }, Proc.new { }, lambda { |a,b,c| } ].each do |my_proc|
+      assert_raises(ArgumentError) do
+        Unicorn::Configurator.new(:after_app_loaded => my_proc)
+      end
+    end
+  end
+
 end

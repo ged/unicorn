@@ -14,8 +14,7 @@ class Unicorn::HttpServer
   # :stopdoc:
   attr_accessor :app, :request, :timeout, :worker_processes,
                 :before_fork, :after_fork, :before_exec,
-                :after_app_loaded,
-                :listener_opts, :preload_app,
+                :after_app_loaded, :listener_opts, :preload_app,
                 :reexec_pid, :orig_app, :init_listeners,
                 :master_pid, :config, :ready_pipe, :user
 

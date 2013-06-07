@@ -139,12 +139,6 @@ class Unicorn::Configurator
     set[:logger] = obj
   end
 
-  # sets after_app_loaded hook to a given block. This block will be called
-  # by the worker after its application (and all dependencies) are loaded.
-  def after_app_loaded(*args, &block)
-    set_hook(:after_app_loaded, block_given? ? block : args[0])
-  end
-
   # sets after_fork hook to a given block.  This block will be called by
   # the worker after forking.  The following is an example hook which adds
   # a per-process listener to every worker:
@@ -178,6 +172,12 @@ class Unicorn::Configurator
   # There is no corresponding after_exec hook (for obvious reasons).
   def before_exec(*args, &block)
     set_hook(:before_exec, block_given? ? block : args[0], 1)
+  end
+
+  # sets after_app_loaded hook to a given block. This block will be called
+  # by the worker after its application (and all dependencies) are loaded.
+  def after_app_loaded(*args, &block)
+    set_hook(:after_app_loaded, block_given? ? block : args[0])
   end
 
   # sets the timeout of worker processes to +seconds+.  Workers
