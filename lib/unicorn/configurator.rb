@@ -37,6 +37,9 @@ class Unicorn::Configurator
     :after_fork => lambda { |server, worker|
         server.logger.info("worker=#{worker.nr} spawned pid=#{$$}")
       },
+    :after_app_loaded => lambda { |server, app|
+        server.logger.info("app=#{app.inspect} loaded")
+      },
     :before_fork => lambda { |server, worker|
         server.logger.info("worker=#{worker.nr} spawning...")
       },
@@ -134,6 +137,12 @@ class Unicorn::Configurator
     end
 
     set[:logger] = obj
+  end
+
+  # sets after_app_loaded hook to a given block. This block will be called
+  # by the worker after its application (and all dependencies) are loaded.
+  def after_app_loaded(*args, &block)
+    set_hook(:after_app_loaded, block_given? ? block : args[0])
   end
 
   # sets after_fork hook to a given block.  This block will be called by

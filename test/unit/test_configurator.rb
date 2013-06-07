@@ -172,4 +172,12 @@ class TestConfigurator < Test::Unit::TestCase
     end
   end
 
+  def test_after_app_loaded_proc
+    test_struct = TestStruct.new
+    [ proc { |a,b| }, Proc.new { |a,b| }, lambda { |a,b| } ].each do |my_proc|
+      Unicorn::Configurator.new(:after_app_loaded => my_proc).commit!(test_struct)
+      assert_equal my_proc, test_struct.after_app_loaded
+    end
+  end
+
 end

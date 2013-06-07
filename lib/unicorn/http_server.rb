@@ -14,6 +14,7 @@ class Unicorn::HttpServer
   # :stopdoc:
   attr_accessor :app, :request, :timeout, :worker_processes,
                 :before_fork, :after_fork, :before_exec,
+                :after_app_loaded,
                 :listener_opts, :preload_app,
                 :reexec_pid, :orig_app, :init_listeners,
                 :master_pid, :config, :ready_pipe, :user
@@ -623,7 +624,7 @@ class Unicorn::HttpServer
     @config = nil
     build_app! unless preload_app
     ssl_enable!
-    @after_fork = @listener_opts = @orig_app = nil
+    @after_fork = @after_app_loaded = @listener_opts = @orig_app = nil
     readers = LISTENERS.dup
     readers << worker
     trap(:QUIT) { nuke_listeners!(readers) }
@@ -759,6 +760,8 @@ class Unicorn::HttpServer
       end
       self.app = app.call
     end
+
+    after_app_loaded.call(self, app)
   end
 
   def proc_name(tag)
